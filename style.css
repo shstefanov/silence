@@ -1,0 +1,34 @@
+body, html, .container{
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.viewport-wrapper{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.viewport{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: light-blue;
+}
+
+.block{
+  position: absolute;
+  background-color: brown;
+}
+
+.player{
+  position: absolute;
+  width: 25px;
+  height: 50px;
+  transform: translateY(-50px);
+  background-color: #3bb8ce;
+}
