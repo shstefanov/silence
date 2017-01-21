@@ -28,7 +28,7 @@ class Player extends GameObject{
   }
 
   move(delta){
-    this.vector.y += this.gravity * delta;
+    this.vector.y += Math.min(this.max_fall_speed, this.gravity * delta);
 
     let diff_x = delta * this.vector.x;
     let diff_y = delta * this.vector.y;
