@@ -13,7 +13,9 @@ class GameObject{
   }
 
   setupObject(){
+    this.initial_y = this.position.y;
     this.element.classList.add("block");
+    this.element.classList.add(this.class);
   }
 
   update(){
@@ -25,18 +27,16 @@ class GameObject{
 
   toJSON(){
     const { position, size } = this;
-    return { position, size };
+    return { position, size, prototype: this.constructor.name };
   }
 
-  collides(obj){
+  has_collision(point, object){
     const vs = [
       [ this.position.x,                   this.position.y                    ],
       [ this.position.x + this.size.width, this.position.y                    ],
       [ this.position.x,                   this.position.y + this.size.height ],
       [ this.position.x + this.size.width, this.position.y + this.size.height ],
     ];
-    const point = [obj.position.x, obj.position.y];
-
     // Compute point in polygon
     // From http://stackoverflow.com/questions/22521982/js-check-if-point-inside-a-polygon
 
@@ -51,11 +51,64 @@ class GameObject{
             && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         if (intersect) inside = !inside;
     }
+    return inside;
+  }
 
-    if(inside){
+  collides(obj){
+    const points = [
+      [ obj.position.x + obj.size.width / 2, obj.position.y ],
+      [ obj.position.x - obj.size.width / 2, obj.position.y ],
+      [ obj.position.x + obj.size.width / 2, obj.position.y - obj.size.height ],
+      [ obj.position.x - obj.size.width / 2, obj.position.y - obj.size.height ],
+    ];
+
+    if(points.some((point)=>{ return this.has_collision(point); })){
       obj.resolveCollision(this);
+      return this;      
     }
   }
 
+  move(delta, abs_delta){
+    this.delta_y =  (Math.sin(abs_delta/this.frequency - this.position.x / this.wave_length) * this.amplitude);
+    this.position.y = this.initial_y + this.delta_y;
+  }
+
   
+}
+
+
+class BottomWaveObject extends GameObject{
+
+  get class(){ return "brown"; }
+
+  constructor(data){
+    super(data);
+    this.amplitude   = 70;
+    this.wave_length = 127;
+    this.frequency   = 1420;
+  }
+
+  move(delta, abs_delta){
+    super.move(delta, abs_delta);
+    let color = Math.floor(this.delta_y);
+    this.element.style.backgroundColor = "rgb(128," + color + ",128)";
+  }
+}
+
+class UpperWaveObject extends GameObject{
+
+  get class(){ return "green"; }
+
+  constructor(data){
+    super(data);
+    this.amplitude   = 100;
+    this.wave_length = 8;
+    this.frequency   = 500;
+  }
+
+  move(delta, abs_delta){
+    super.move(delta, abs_delta);
+    let color = Math.floor(this.delta_y);
+    this.element.style.backgroundColor = "rgb(" + color + ", 128, 128)";
+  }
 }
