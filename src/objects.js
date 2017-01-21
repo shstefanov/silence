@@ -13,6 +13,7 @@ class GameObject{
   }
 
   setupObject(){
+    this.initial_y = this.position.y;
     this.element.classList.add("block");
   }
 
@@ -28,6 +29,9 @@ class GameObject{
     return { position, size };
   }
 
+  move(delta, abs_delta){
+    this.position.y = this.initial_y + (Math.sin(abs_delta/200 - this.position.x/200) * 30);
+  }
   collides(obj){
     const vs = [
       [ this.position.x,                   this.position.y                    ],
