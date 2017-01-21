@@ -51,13 +51,7 @@ class World{
 
     this.player.move(delta);
     
-    for(let obj of this.objects){
-      if(this.player.collides(obj)){
-        this.player.position.y = obj.position.y;
-        this.player.vector.y   = 0;
-        this.player.can_jump   = true;
-      }
-    }
+    for(let obj of this.objects) obj.collides(this.player);
 
     this.player.update();
 

@@ -23,12 +23,12 @@ class GameObject{
 
   collides(obj){
     const vs = [
-      [ obj.position.x,                  obj.position.y                   ],
-      [ obj.position.x + obj.size.width, obj.position.y                   ],
-      [ obj.position.x,                  obj.position.y + obj.size.height ],
-      [ obj.position.x + obj.size.width, obj.position.y + obj.size.height ],
+      [ this.position.x,                   this.position.y                    ],
+      [ this.position.x + this.size.width, this.position.y                    ],
+      [ this.position.x,                   this.position.y + this.size.height ],
+      [ this.position.x + this.size.width, this.position.y + this.size.height ],
     ];
-    const point = [this.position.x, this.position.y];
+    const point = [obj.position.x, obj.position.y];
 
     // Compute point in polygon
     // From http://stackoverflow.com/questions/22521982/js-check-if-point-inside-a-polygon
@@ -45,6 +45,10 @@ class GameObject{
         if (intersect) inside = !inside;
     }
 
-    return inside;
+    if(inside){
+      obj.resolveCollision(this);
+    }
   }
+
+  
 }

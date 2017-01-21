@@ -36,4 +36,10 @@ class Player extends GameObject{
     this.element.style.top  = this.position.y + "px";
   }
 
+  resolveCollision(obj){
+    this.position.y = obj.position.y;
+    this.vector.y   = 0;
+    this.can_jump   = true;
+  }
+
 }
