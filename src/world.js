@@ -127,16 +127,26 @@ class World{
   setupKeyboard(){
     var down_keys = {
       "87": ()=>{  this.player.jump();  } ,         //W
+      "38": ()=>{  this.player.jump();  } ,         //UP ARROW
+      "32": ()=>{  this.player.jump();  } ,         //SPACE
       // "83": () => { Math.max(move_y++, max_speed); }, //S
       "65": () => { this.player.setMove(-1); }, // A
+      "37": () => { this.player.setMove(-1); }, // LEFT ARROW
+
       "68": () => { this.player.setMove( 1); }, // D
+      "39": () => { this.player.setMove( 1); }, // RIGHT ARROW
+
     };
 
     var up_keys = {
       // "87": /* "w" */() => { move_y++; },
       // "83": /* "s" */() => { move_y--; },
       "65": () => { this.player.setMove(0); }, // A
+      "37": () => { this.player.setMove(0); }, // LEFT ARROW
+
       "68": () => { this.player.setMove(0); }, // D
+      "39": () => { this.player.setMove(0); }, // RIGHT ARROW
+
     };
 
 
