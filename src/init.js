@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function(){
     
     player: { 
       position: { x:     25, y:      250 }, 
-      vector:   { x:     0,  y:      0   } ,
+      vector:   { x:     0,  y:      0   },
       size:     { width: 25, height: 50  }
     },
 
