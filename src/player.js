@@ -51,9 +51,23 @@ class Player extends GameObject{
   resolveCollision(obj){
 
     if(obj instanceof BottomWaveObject){
-      this.position.y = obj.position.y;
-      this.vector.y   = 0;
-      this.can_jump   = true;
+      if(Math.abs(obj.position.y - this.position.y) < 15){
+        // Place on top and allow jump
+        this.position.y = obj.position.y;
+        this.vector.y   = 0;
+        this.can_jump   = true;
+      }
+      else{
+        var diff_begin = Math.abs(this.position.x - obj.position.x);
+        var diff_end   = Math .abs(this.position.x - ( obj.position.x + obj.size.width ));
+        if(diff_begin < diff_end){
+          this.position.x = obj.position.x - 13;
+        }
+        else{
+          this.position.x = obj.position.x + obj.size.width + 13;
+        }
+      }
+
     }
     else if(obj instanceof UpperWaveObject){
       this.position.y = obj.position.y + obj.size.height + this.size.height;
