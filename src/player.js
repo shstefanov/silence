@@ -24,7 +24,13 @@ class Player extends GameObject{
   }
 
   setMove(n){
+    console.log(n);
     this.vector.x = n * this.walk_speed;
+    if(n === -1) this.element.classList.add("left");
+    else if(n === 1) this.element.classList.remove("left");
+
+    if(n === 0) this.element.classList.remove("walking");
+    else        this.element.classList.add("walking");
   }
 
   move(delta){

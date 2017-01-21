@@ -126,10 +126,11 @@ class World{
 
   setupKeyboard(){
     var down_keys = {
+
       "87": ()=>{  this.player.jump();  } ,         //W
       "38": ()=>{  this.player.jump();  } ,         //UP ARROW
       "32": ()=>{  this.player.jump();  } ,         //SPACE
-      // "83": () => { Math.max(move_y++, max_speed); }, //S
+
       "65": () => { this.player.setMove(-1); }, // A
       "37": () => { this.player.setMove(-1); }, // LEFT ARROW
 
@@ -139,8 +140,7 @@ class World{
     };
 
     var up_keys = {
-      // "87": /* "w" */() => { move_y++; },
-      // "83": /* "s" */() => { move_y--; },
+
       "65": () => { this.player.setMove(0); }, // A
       "37": () => { this.player.setMove(0); }, // LEFT ARROW
 
@@ -148,7 +148,6 @@ class World{
       "39": () => { this.player.setMove(0); }, // RIGHT ARROW
 
     };
-
 
     document.body.addEventListener("keydown", function(e){
       var handler = down_keys[e.keyCode];
@@ -161,7 +160,7 @@ class World{
     });
   }
 
-  render(){
+  render(){ // return;
     let new_now = Date.now();
     let delta   = new_now - this.now;
     let abs_delta = new_now - this.abs_now;
@@ -213,6 +212,7 @@ class World{
 
 
       const object = this.addObject({
+        prototype: "BottomWaveObject",
         size:     { x: 0, y: 0 },
         position: { x: this.scene_position + x, y: y },
       });
