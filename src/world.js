@@ -138,6 +138,7 @@ class World{
 
   setupEditor(){
     this.container.addEventListener("mousedown", (e)=>{
+      if(e.button !== 0) return;
       const x = e.pageX, y = e.pageY;
 
 
