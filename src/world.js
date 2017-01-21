@@ -2,6 +2,9 @@
 class World{
 
   constructor(container, data){
+
+    this.edit_mode = true;
+
     this.setupKeyboard();
     this.container = document.querySelector(container);
     this.container.style.width  = data.size.width  + "px";
@@ -56,5 +59,34 @@ class World{
     this.player.update();
 
     requestAnimationFrame(()=>this.render());
+  }
+
+  setupEditor(){
+    this.container.addEventListener("mousedown", (e)=>{
+      const {x, y} = e;
+
+      const object = this.addObject({
+        size:     { x: 0, y: 0 },
+        position: { x: x, y: y },
+      });
+
+      function mouse_move(e){
+        const width  = e.x - x;
+        const height = e.y - y;
+        object.size  = { width, height };
+        console.log(object.size);
+        object.update();
+      }
+
+      const self = this;
+      function mouse_up(){
+        self.flushStorage();
+        self.container.removeEventListener("mousemove", mouse_move );
+        self.container.removeEventListener("mouseup",   mouse_up   );
+      }
+
+      this.container.addEventListener("mousemove", mouse_move );
+      this.container.addEventListener("mouseup",   mouse_up   );
+    });
   }
 }
