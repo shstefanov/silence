@@ -10,15 +10,57 @@ class World{
     this.container = this.wrapper.querySelector(".viewport");
     this.container.style.width  = data.size.width  + "px";
     this.container.style.height = data.size.height + "px";
+    
+    this.edit_mode && this.setupEditor();
+
+    this.objects = [];
+    data.objects.forEach((obj_data)=>this.addObject(obj_data));
+    
     this.player = new Player(data.player);
     this.container.appendChild(this.player.element);
-    this.objects = data.objects.map((object_data)=>{
-      const object = new GameObject(object_data);
-      this.container.appendChild(object.element);
-      return object;
-    });
+
     this.now = Date.now();
     this.render();
+  }
+
+  addObject(object_data){
+    const object = new GameObject(object_data);
+    this.container.appendChild(object.element);
+    this.objects.push(object);
+    if(this.edit_mode){
+      object.element.addEventListener("dblclick", (e)=>{
+        this.removeObjectByDOMElement(e.target);
+        this.flushStorage();
+      })
+    }
+
+    return object;
+  }
+
+  removeObject(object){
+    for(let obj of this.objects){
+      if(obj === object){
+        this.objects.splice(this.objects.indexOf(obj), 1);
+        obj.element.remove();
+        return;
+      }
+    }
+  }
+
+  removeObjectByDOMElement(element){
+    for(let obj of this.objects){
+      if(obj.element === element){
+        this.objects.splice(this.objects.indexOf(obj), 1);
+        obj.element.remove();
+        return;
+      }
+    }
+  }
+
+  flushStorage(){
+    if(this.edit_mode){
+      localStorage.objects = JSON.stringify(this.toJSON().objects);
+    }
   }
 
   setupKeyboard(){
@@ -89,5 +131,13 @@ class World{
       this.container.addEventListener("mousemove", mouse_move );
       this.container.addEventListener("mouseup",   mouse_up   );
     });
+  }
+
+  toJSON(){
+    return {
+      size: this.size,
+      objects: this.objects.map((obj)=>obj.toJSON()),
+      player:  this.player.toJSON(),
+    }
   }
 }
