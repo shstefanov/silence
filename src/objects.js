@@ -54,6 +54,7 @@ class GameObject{
 
     if(inside){
       obj.resolveCollision(this);
+      return this;
     }
   }
 

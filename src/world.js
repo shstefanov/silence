@@ -117,7 +117,15 @@ class World{
       this.setupPlayer();
     }
     
-    for(let obj of this.objects) obj.collides(this.player);
+    let collides = 0;
+    for(let obj of this.objects) {
+      let coll = obj.collides(this.player);
+      if(coll) collides++;
+    }
+
+    if(!collides){
+      this.player.can_jump = false;
+    }
 
     this.player.update();
 
