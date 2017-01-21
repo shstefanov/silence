@@ -6,9 +6,15 @@ class Player extends GameObject{
     this.gravity    = 0.001;
     this.can_jump   = false;
     this.jump_speed = 0.5;
-    this.walk_speed = .1;
+    this.walk_speed = .2;
+    this.max_fall_speed = 10;
 
     this.element.classList.add("player");
+  }
+
+  toJSON(){
+    const { position, size, vector } = this;
+    return { position, size, vector };
   }
 
   jump(){
@@ -22,7 +28,7 @@ class Player extends GameObject{
   }
 
   move(delta){
-    this.vector.y += this.gravity * delta;
+    this.vector.y += Math.min(this.max_fall_speed, this.gravity * delta);
 
     let diff_x = delta * this.vector.x;
     let diff_y = delta * this.vector.y;

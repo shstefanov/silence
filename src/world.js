@@ -2,19 +2,78 @@
 class World{
 
   constructor(container, data){
+
+    this.size = data.size;
+    this.player_initials = JSON.stringify(data.player);
+
+    this.edit_mode = true;
+
     this.setupKeyboard();
-    this.container = document.querySelector(container);
+    this.wrapper = document.querySelector(container);
+    this.container = this.wrapper.querySelector(".viewport");
     this.container.style.width  = data.size.width  + "px";
     this.container.style.height = data.size.height + "px";
-    this.player = new Player(data.player);
-    this.container.appendChild(this.player.element);
-    this.objects = data.objects.map((object_data)=>{
-      const object = new GameObject(object_data);
-      this.container.appendChild(object.element);
-      return object;
-    });
+    
+    this.edit_mode && this.setupEditor();
+
+    this.objects = [];
+    data.objects.forEach((obj_data)=>this.addObject(obj_data));
+    
+    this.setupPlayer();
+
     this.now = Date.now();
     this.render();
+  }
+
+  setupPlayer(){
+    console.log("setupPlayer: ", this.player_initials);
+    this.player = new Player(JSON.parse(this.player_initials));
+    this.container.appendChild(this.player.element);
+  }
+
+  removePlayer(){
+    this.player.element.remove();
+    this.player = null;
+  }
+
+  addObject(object_data){
+    const object = new GameObject(object_data);
+    this.container.appendChild(object.element);
+    this.objects.push(object);
+    if(this.edit_mode){
+      object.element.addEventListener("dblclick", (e)=>{
+        this.removeObjectByDOMElement(e.target);
+        this.flushStorage();
+      })
+    }
+
+    return object;
+  }
+
+  removeObject(object){
+    for(let obj of this.objects){
+      if(obj === object){
+        this.objects.splice(this.objects.indexOf(obj), 1);
+        obj.element.remove();
+        return;
+      }
+    }
+  }
+
+  removeObjectByDOMElement(element){
+    for(let obj of this.objects){
+      if(obj.element === element){
+        this.objects.splice(this.objects.indexOf(obj), 1);
+        obj.element.remove();
+        return;
+      }
+    }
+  }
+
+  flushStorage(){
+    if(this.edit_mode){
+      localStorage.objects = JSON.stringify(this.toJSON().objects);
+    }
   }
 
   setupKeyboard(){
@@ -50,11 +109,53 @@ class World{
     this.now    = new_now;
 
     this.player.move(delta);
+
+    if(this.player.position.y > this.size.height){
+      this.removePlayer();
+      console.log("You died");
+      this.setupPlayer();
+    }
     
     for(let obj of this.objects) obj.collides(this.player);
 
     this.player.update();
 
     requestAnimationFrame(()=>this.render());
+  }
+
+  setupEditor(){
+    this.container.addEventListener("mousedown", (e)=>{
+      const {x, y} = e;
+
+      const object = this.addObject({
+        size:     { x: 0, y: 0 },
+        position: { x: x, y: y },
+      });
+
+      function mouse_move(e){
+        const width  = e.x - x;
+        const height = e.y - y;
+        object.size  = { width, height };
+        object.update();
+      }
+
+      const self = this;
+      function mouse_up(){
+        self.flushStorage();
+        self.container.removeEventListener("mousemove", mouse_move );
+        self.container.removeEventListener("mouseup",   mouse_up   );
+      }
+
+      this.container.addEventListener("mousemove", mouse_move );
+      this.container.addEventListener("mouseup",   mouse_up   );
+    });
+  }
+
+  toJSON(){
+    return {
+      size: this.size,
+      objects: this.objects.map((obj)=>obj.toJSON()),
+      player:  this.player.toJSON(),
+    }
   }
 }
