@@ -17,8 +17,10 @@ class GameObject{
   }
 
   update(){
-    this.element.style.left = this.position.x + "px";
-    this.element.style.top  = this.position.y + "px";
+    this.element.style.left   = this.position.x + "px";
+    this.element.style.top    = this.position.y + "px";
+    this.element.style.width  = this.size.width + "px";
+    this.element.style.height = this.size.height + "px";
   }
 
   collides(obj){
