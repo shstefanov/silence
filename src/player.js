@@ -3,7 +3,7 @@ class Player extends GameObject{
   
   setupObject(){
 
-    this.gravity    = 0.02;
+    this.gravity    = 0.001;
     this.can_jump   = false;
     this.jump_speed = 0.5;
     this.walk_speed = .1;
@@ -22,7 +22,7 @@ class Player extends GameObject{
   }
 
   move(delta){
-    this.vector.y += this.gravity;
+    this.vector.y += this.gravity * delta;
 
     let diff_x = delta * this.vector.x;
     let diff_y = delta * this.vector.y;
