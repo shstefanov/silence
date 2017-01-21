@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
   var world = new World(".viewport-wrapper", {
     
-    size: { width:  2000, height: 1000 }, 
+    size: { width:  10000, height: 1000 },
     
     player: { 
       position: { x:     50, y:      405 }, 
