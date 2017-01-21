@@ -17,12 +17,16 @@ class World{
     this.container.style.width  = data.size.width  + "px";
     this.container.style.height = data.size.height + "px";
     
-    this.edit_mode && this.setupEditor();
 
     this.objects = [];
     data.objects.forEach((obj_data)=>this.addObject(obj_data));
     
     this.setupPlayer();
+    
+    if(this.edit_mode) {
+      this.setupEditor();
+      this.editObject(this.player);
+    }
 
     this.now = Date.now();
     this.render();
@@ -42,14 +46,47 @@ class World{
     const object = new GameObject(object_data);
     this.container.appendChild(object.element);
     this.objects.push(object);
-    if(this.edit_mode){
-      object.element.addEventListener("dblclick", (e)=>{
-        this.removeObjectByDOMElement(e.target);
-        this.flushStorage();
-      })
-    }
-
+    if(this.edit_mode) this.editObject(object);
     return object;
+  }
+
+  editObject(object){
+    const self = this;
+    object.element.addEventListener("dblclick", (e)=>{
+      this.removeObjectByDOMElement(e.target);
+      this.flushStorage();
+    });
+
+    object.element.addEventListener("mousedown", (e)=>{
+      self.skip_update = true;
+      if(e.button !== 0) return;
+      const x = e.pageX, y = e.pageY;
+      const base_x = object.position.x, base_y = object.position.y;
+
+      e.stopPropagation();
+
+      function mouse_move(e){
+        const diff_x = e.pageX - x;
+        const diff_y = e.pageY - y;
+
+        object.position.x = base_x + diff_x;
+        object.position.y = base_y + diff_y;
+
+        object.update();
+      }
+
+      function mouse_up(e){
+        document.body.removeEventListener("mousemove", mouse_move );
+        document.body.removeEventListener("mouseup",   mouse_up   );
+        self.flushStorage();
+        self.skip_update = false;
+      }
+
+      document.body.addEventListener("mousemove", mouse_move );
+      document.body.addEventListener("mouseup",   mouse_up   );
+
+
+    });
   }
 
   removeObject(object){
@@ -110,28 +147,31 @@ class World{
     let delta   = new_now - this.now;
     this.now    = new_now;
 
-    this.player.move(delta);
+    if(!this.skip_update){
+      this.player.move(delta);
 
-    if(this.player.position.y > this.size.height){
-      this.removePlayer();
-      this.setupPlayer();
+      if(this.player.position.y > this.size.height){
+        this.removePlayer();
+        this.setupPlayer();
+      }
+      
+      let collides = 0;
+      for(let obj of this.objects) {
+        let coll = obj.collides(this.player);
+        if(coll) collides++;
+      }
+
+      if(!collides){
+        this.player.can_jump = false;
+      }
+
+      this.player.update();
+
+      this.scene_position = Math.max(0,this.player.position.x - 200 );
+      this.scene_position = Math.min(this.size.width - this.viewport_width, this.scene_position);
+      this.wrapper.scrollLeft = this.scene_position;      
     }
-    
-    let collides = 0;
-    for(let obj of this.objects) {
-      let coll = obj.collides(this.player);
-      if(coll) collides++;
-    }
 
-    if(!collides){
-      this.player.can_jump = false;
-    }
-
-    this.player.update();
-
-    this.scene_position = Math.max(0,this.player.position.x - 200 );
-    this.scene_position = Math.min(this.size.width - this.viewport_width, this.scene_position);
-    this.wrapper.scrollLeft = this.scene_position;
 
     requestAnimationFrame(()=>this.render());
   }
