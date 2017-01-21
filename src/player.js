@@ -6,7 +6,8 @@ class Player extends GameObject{
     this.gravity    = 0.001;
     this.can_jump   = false;
     this.jump_speed = 0.5;
-    this.walk_speed = .1;
+    this.walk_speed = .2;
+    this.max_fall_speed = 10;
 
     this.element.classList.add("player");
   }
