@@ -13,7 +13,7 @@ class World{
 
     this.scene_position = 0;
 
-    this.edit_mode = true;
+    this.edit_mode = false;
 
     this.abs_now = Date.now();
 
