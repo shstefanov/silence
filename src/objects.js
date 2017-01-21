@@ -69,7 +69,8 @@ class GameObject{
   }
 
   move(delta, abs_delta){
-    this.position.y = this.initial_y + (Math.sin(abs_delta/this.frequency - this.position.x / this.wave_length) * this.amplitude);
+    this.delta_y =  (Math.sin(abs_delta/this.frequency - this.position.x / this.wave_length) * this.amplitude);
+    this.position.y = this.initial_y + this.delta_y;
   }
 
   
@@ -83,8 +84,14 @@ class BottomWaveObject extends GameObject{
   constructor(data){
     super(data);
     this.amplitude   = 70;
-    this.wave_length = 17;
+    this.wave_length = 127;
     this.frequency   = 1420;
+  }
+
+  move(delta, abs_delta){
+    super.move(delta, abs_delta);
+    let color = Math.floor(this.delta_y);
+    this.element.style.backgroundColor = "rgb(128," + color + ",128)";
   }
 }
 
@@ -97,5 +104,11 @@ class UpperWaveObject extends GameObject{
     this.amplitude   = 100;
     this.wave_length = 8;
     this.frequency   = 500;
+  }
+
+  move(delta, abs_delta){
+    super.move(delta, abs_delta);
+    let color = Math.floor(this.delta_y);
+    this.element.style.backgroundColor = "rgb(" + color + ", 128, 128)";
   }
 }
