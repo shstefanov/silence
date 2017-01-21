@@ -114,7 +114,6 @@ class World{
 
     if(this.player.position.y > this.size.height){
       this.removePlayer();
-      console.log("You died");
       this.setupPlayer();
     }
     
