@@ -12,6 +12,11 @@ class Player extends GameObject{
     this.element.classList.add("player");
   }
 
+  toJSON(){
+    const { position, size, vector } = this;
+    return { position, size, vector };
+  }
+
   jump(){
     if(!this.can_jump) return;
     this.can_jump = false;
