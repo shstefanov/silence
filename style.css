@@ -22,7 +22,13 @@ body, html, .container{
 
 .block{
   position: absolute;
+}
+.block.brown{
   background-color: brown;
+}
+
+.block.green{
+  background-color: green;
 }
 
 .player{

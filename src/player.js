@@ -6,7 +6,7 @@ class Player extends GameObject{
     this.gravity    = 0.001;
     this.can_jump   = false;
     this.jump_speed = 0.5;
-    this.walk_speed = .2;
+    this.walk_speed = .3;
     this.max_fall_speed = 10;
 
     this.element.classList.add("player");
@@ -43,9 +43,18 @@ class Player extends GameObject{
   }
 
   resolveCollision(obj){
-    this.position.y = obj.position.y;
-    this.vector.y   = 0;
-    this.can_jump   = true;
+
+    if(obj instanceof BottomWaveObject){
+      this.position.y = obj.position.y;
+      this.vector.y   = 0;
+      this.can_jump   = true;
+    }
+    else if(obj instanceof UpperWaveObject){
+      this.position.y = obj.position.y + obj.size.height + this.size.height;
+      this.vector.y   = 0;
+      this.can_jump   = false;
+    }
+
   }
 
 }

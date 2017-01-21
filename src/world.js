@@ -45,7 +45,8 @@ class World{
   }
 
   addObject(object_data){
-    const object = new GameObject(object_data);
+    let Prototype = object_data.prototype || GameObject;
+    const object = new Prototype(object_data);
     this.container.appendChild(object.element);
     this.objects.push(object);
     if(this.edit_mode) this.editObject(object);
@@ -160,14 +161,21 @@ class World{
         this.setupPlayer();
       }
       
-      let collides = 0;
+      let collides = [];
       for(let obj of this.objects) {
         let coll = obj.collides(this.player);
-        if(coll) collides++;
+        if(coll) collides.push(coll);
       }
 
-      if(!collides){
+      if(!collides.length){
         this.player.can_jump = false;
+      }
+      else if(
+        collides.some((obj)=>{ return obj instanceof BottomWaveObject }) && 
+        collides.some((obj)=>{ return obj instanceof UpperWaveObject })
+      ){
+        this.removePlayer();
+        this.setupPlayer();
       }
 
       this.player.update();
