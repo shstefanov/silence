@@ -27,7 +27,7 @@ class GameObject{
 
   toJSON(){
     const { position, size } = this;
-    return { position, size };
+    return { position, size, prototype: this.constructor.name };
   }
 
   has_collision(point, object){
