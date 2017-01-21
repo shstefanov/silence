@@ -130,7 +130,9 @@ class World{
 
   setupEditor(){
     this.container.addEventListener("mousedown", (e)=>{
-      const {x, y} = e;
+      // const {x, y} = e;
+      const x = e.pageX, y = e.pageY;
+
 
       const object = this.addObject({
         size:     { x: 0, y: 0 },
@@ -138,8 +140,8 @@ class World{
       });
 
       function mouse_move(e){
-        const width  = e.x - x;
-        const height = e.y - y;
+        const width  = e.pageX - x;
+        const height = e.pageY - y;
         object.size  = { width, height };
         object.update();
       }
