@@ -3,6 +3,11 @@ class World{
 
   constructor(container, data){
 
+    this.prototypes = {
+      "BottomWaveObject":  BottomWaveObject,
+      "UpperWaveObject":   UpperWaveObject,
+    }
+
     this.size = data.size;
     this.player_initials = JSON.stringify(data.player);
 
@@ -45,7 +50,7 @@ class World{
   }
 
   addObject(object_data){
-    let Prototype = object_data.prototype || GameObject;
+    let Prototype = this.prototypes[object_data.prototype] || GameObject;
     const object = new Prototype(object_data);
     this.container.appendChild(object.element);
     this.objects.push(object);
