@@ -36,6 +36,7 @@ class World{
     }
 
     this.now = Date.now();
+    this.edit_mode && this.flushStorage();
     this.render();
   }
 
