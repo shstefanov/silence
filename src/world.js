@@ -26,7 +26,6 @@ class World{
   }
 
   setupPlayer(){
-    console.log("setupPlayer: ", this.player_initials);
     this.player = new Player(JSON.parse(this.player_initials));
     this.container.appendChild(this.player.element);
   }
