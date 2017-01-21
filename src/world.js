@@ -3,6 +3,9 @@ class World{
 
   constructor(container, data){
 
+    this.size = data.size;
+    this.player_initials = JSON.stringify(data.player);
+
     this.edit_mode = true;
 
     this.setupKeyboard();
@@ -16,11 +19,21 @@ class World{
     this.objects = [];
     data.objects.forEach((obj_data)=>this.addObject(obj_data));
     
-    this.player = new Player(data.player);
-    this.container.appendChild(this.player.element);
+    this.setupPlayer();
 
     this.now = Date.now();
     this.render();
+  }
+
+  setupPlayer(){
+    console.log("setupPlayer: ", this.player_initials);
+    this.player = new Player(JSON.parse(this.player_initials));
+    this.container.appendChild(this.player.element);
+  }
+
+  removePlayer(){
+    this.player.element.remove();
+    this.player = null;
   }
 
   addObject(object_data){
@@ -96,6 +109,12 @@ class World{
     this.now    = new_now;
 
     this.player.move(delta);
+
+    if(this.player.position.y > this.size.height){
+      this.removePlayer();
+      console.log("You died");
+      this.setupPlayer();
+    }
     
     for(let obj of this.objects) obj.collides(this.player);
 
@@ -117,7 +136,6 @@ class World{
         const width  = e.x - x;
         const height = e.y - y;
         object.size  = { width, height };
-        console.log(object.size);
         object.update();
       }
 
