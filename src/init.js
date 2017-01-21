@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function(){
     objects: [
       { position: {x: 10,  y: 410},  size: {width: 100, height: 30} },
       { position: {x: 110, y: 510},  size: {width: 100, height: 30} },
+      { position: {x: 210, y: 400},  size: {width: 100, height: 30} },
     ],
     
     
