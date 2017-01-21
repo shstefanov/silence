@@ -10,6 +10,8 @@ class World{
 
     this.edit_mode = true;
 
+    this.abs_now = Date.now();
+
     this.setupKeyboard();
     this.wrapper = document.querySelector(container).parentNode;
     this.viewport_width = parseInt(getComputedStyle(this.wrapper).width.replace("px", ""));
@@ -145,10 +147,13 @@ class World{
   render(){
     let new_now = Date.now();
     let delta   = new_now - this.now;
+    let abs_delta = new_now - this.abs_now;
     this.now    = new_now;
 
     if(!this.skip_update){
-      this.player.move(delta);
+      
+      this.player.move(delta, abs_delta);
+      for(let obj of this.objects) obj.move(delta, abs_delta);
 
       if(this.player.position.y > this.size.height){
         this.removePlayer();
@@ -166,6 +171,7 @@ class World{
       }
 
       this.player.update();
+      for(let obj of this.objects) obj.update();
 
       this.scene_position = Math.max(0,this.player.position.x - 200 );
       this.scene_position = Math.min(this.size.width - this.viewport_width, this.scene_position);
