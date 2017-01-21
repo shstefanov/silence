@@ -23,6 +23,11 @@ class GameObject{
     this.element.style.height = this.size.height + "px";
   }
 
+  toJSON(){
+    const { position, size } = this;
+    return { position, size };
+  }
+
   collides(obj){
     const vs = [
       [ this.position.x,                   this.position.y                    ],
