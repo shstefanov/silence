@@ -1,1 +1,1 @@
-[https://shstefanov.github.io/silence/] https://shstefanov.github.io/silence/
+https://shstefanov.github.io/silence/
