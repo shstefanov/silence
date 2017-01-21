@@ -6,7 +6,8 @@ class World{
     this.edit_mode = true;
 
     this.setupKeyboard();
-    this.container = document.querySelector(container);
+    this.wrapper = document.querySelector(container);
+    this.container = this.wrapper.querySelector(".viewport");
     this.container.style.width  = data.size.width  + "px";
     this.container.style.height = data.size.height + "px";
     this.player = new Player(data.player);
