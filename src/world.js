@@ -6,10 +6,13 @@ class World{
     this.size = data.size;
     this.player_initials = JSON.stringify(data.player);
 
+    this.scene_position = 0;
+
     this.edit_mode = true;
 
     this.setupKeyboard();
-    this.wrapper = document.querySelector(container);
+    this.wrapper = document.querySelector(container).parentNode;
+    this.viewport_width = parseInt(getComputedStyle(this.wrapper).width.replace("px", ""));
     this.container = this.wrapper.querySelector(".viewport");
     this.container.style.width  = data.size.width  + "px";
     this.container.style.height = data.size.height + "px";
@@ -119,6 +122,10 @@ class World{
 
     this.player.update();
 
+    this.scene_position = Math.max(0,this.player.position.x - 200 );
+    this.scene_position = Math.min(this.size.width - this.viewport_width, this.scene_position);
+    this.wrapper.scrollLeft = this.scene_position;
+
     requestAnimationFrame(()=>this.render());
   }
 
@@ -128,7 +135,7 @@ class World{
 
       const object = this.addObject({
         size:     { x: 0, y: 0 },
-        position: { x: x, y: y },
+        position: { x: this.scene_position + x, y: y },
       });
 
       function mouse_move(e){
